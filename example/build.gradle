@@ -26,6 +26,11 @@ android {
             buildConfigField("String", "MICROCMS_API_KEY", "\"${localProperties.getProperty("microCMSApiKey")}\"")
             buildConfigField("String", "MICROCMS_GLOBAL_DRAFT_KEY", "\"${localProperties.getProperty("microCMSGlobalDraftKey") ?: ""}\"")
         }
+        release {
+            buildConfigField("String", "MICROCMS_SERVICE_DOMAIN", "\"${localProperties.getProperty("microCMSServiceDomain")}\"")
+            buildConfigField("String", "MICROCMS_API_KEY", "\"${localProperties.getProperty("microCMSApiKey")}\"")
+            buildConfigField("String", "MICROCMS_GLOBAL_DRAFT_KEY", "\"${localProperties.getProperty("microCMSGlobalDraftKey") ?: ""}\"")
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
