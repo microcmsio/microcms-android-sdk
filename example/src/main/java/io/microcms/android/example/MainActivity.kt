@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import io.microcms.android.Client
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,10 +20,10 @@ class MainActivity : AppCompatActivity() {
         //リスト取得
         client.getList(
                 "blog",
-                mapOf("limit" to 5, "filters" to "createdAt[greater_than]2021")
+                mapOf("limit" to 2, "filters" to "createdAt[greater_than]2021")
         ) { result ->
-           result.onSuccess { Log.d("microcms_example", "Success!! ${it}") }
-                   .onFailure { Log.d("microcms_example", "Failure!! ${it}") }
+           result.onSuccess { listJson.text = it.toString(2) }
+                   .onFailure { listJson.text = it.toString() }
         }
 
         //個別に取得
@@ -31,8 +32,8 @@ class MainActivity : AppCompatActivity() {
                 "what-is-nocoderowcode",
                 mapOf("fields" to "id")
         ) { result ->
-            result.onSuccess { Log.d("microcms_example", "Success!! ${it}") }
-                    .onFailure { Log.d("microcms_example", "Failure!! ${it}") }
+            result.onSuccess { detailJson.text = it.toString((2)) }
+                    .onFailure { detailJson.text = it.toString() }
         }
     }
 }
