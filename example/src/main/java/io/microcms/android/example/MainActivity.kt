@@ -2,14 +2,17 @@ package io.microcms.android.example
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import io.microcms.android.Client
-import kotlinx.android.synthetic.main.activity_main.*
+import io.microcms.android.example.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val client = Client(
                 serviceDomain = BuildConfig.MICROCMS_SERVICE_DOMAIN,
@@ -22,8 +25,8 @@ class MainActivity : AppCompatActivity() {
                 "blog",
                 mapOf("limit" to 2, "filters" to "createdAt[greater_than]2021")
         ) { result ->
-           result.onSuccess { listJson.text = it.toString(2) }
-                   .onFailure { listJson.text = it.toString() }
+           result.onSuccess { binding.listJson.text = it.toString(2) }
+                   .onFailure { binding.listJson.text = it.toString() }
         }
 
         //個別に取得
@@ -32,8 +35,8 @@ class MainActivity : AppCompatActivity() {
                 "what-is-nocoderowcode",
                 mapOf("fields" to "id")
         ) { result ->
-            result.onSuccess { detailJson.text = it.toString((2)) }
-                    .onFailure { detailJson.text = it.toString() }
+            result.onSuccess { binding.detailJson.text = it.toString((2)) }
+                    .onFailure { binding.detailJson.text = it.toString() }
         }
     }
 }
