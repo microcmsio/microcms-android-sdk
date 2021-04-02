@@ -6,7 +6,29 @@ It helps you to use microCMS from Android(Kotlin) applications.
 
 ### Installation
 
-_under constructions..._
+The library is located in maven central.
+
+```gradle
+buildscript {
+    repositories {
+        mavenCentral() //need this line
+    }
+}
+```
+
+Install dependency:
+
+```gradle
+dependencies {
+    implementation 'io.microcms:android-sdk:1.0.0'
+}
+```
+
+And you need to get `android.permission.INTERNET` permission in the manifest:
+
+```xml
+<uses-permission android:name="android.permission.INTERNET" />
+```
 
 ### Hot to use
 
@@ -21,7 +43,7 @@ val client = Client(
 ```
 
 Next, you can call some api like below.
-`result` is a instance of [kotlin standard class](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/).
+`result`(`Result<JSONObject>`) is a instance of [kotlin standard class](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/).
 
 ```kotlin
 client.getList(
