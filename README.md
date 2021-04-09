@@ -1,6 +1,7 @@
 # microCMS Android SDK
 
 It helps you to use microCMS from Android(Kotlin) applications.
+Check [the official documentation](https://document.microcms.io/tutorial/android) for more information
 
 ## Getting Started
 
@@ -49,11 +50,15 @@ Next, you can call some api like below.
 client.getList(
         "API_ENDPOINT",
         mapOf("limit" to 2, "filters" to "createdAt[greater_than]2021") //some params
-) { result -> /* some actions */ }
+) { result -> 
+    result.onSuccess { json -> Log.d("microCMS example", json.getJSONArray("contents").toString(2)) }
+}
 
 client.get(
         "API_ENDPOINT",
         "CONTENT_ID",
         mapOf("fields" to "id") //some params
-) { result -> /* some actions */ }
+) { result ->
+    result.onSuccess { json -> Log.d("microCMS example", json.getString("publishedAt")) }
+}
 ```
