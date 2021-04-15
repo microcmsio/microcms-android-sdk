@@ -21,7 +21,7 @@ Install dependency:
 
 ```gradle
 dependencies {
-    implementation 'io.microcms:android-sdk:1.0.0'
+    implementation 'io.microcms:android-sdk:1.0.1'
 }
 ```
 
