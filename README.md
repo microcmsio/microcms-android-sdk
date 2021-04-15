@@ -47,7 +47,7 @@ Next, you can call some api like below.
 `result`(`Result<JSONObject>`) is a instance of [kotlin standard class](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/).
 
 ```kotlin
-client.getList(
+client.get(
         "API_ENDPOINT",
         mapOf("limit" to 2, "filters" to "createdAt[greater_than]2021") //some params
 ) { result -> 
