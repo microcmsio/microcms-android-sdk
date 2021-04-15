@@ -20,8 +20,8 @@ class MainActivity : AppCompatActivity() {
                 globalDraftKey = BuildConfig.MICROCMS_GLOBAL_DRAFT_KEY
         )
 
-        //リスト取得
-        client.getList(
+        //リスト取得もしくはオブジェクト形式の取得
+        client.get(
                 "blog",
                 mapOf("limit" to 2, "filters" to "createdAt[greater_than]2021")
         ) { result ->
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         //個別に取得
         client.get(
                 "blog",
-                "what-is-nocoderowcode",
+                "my-first-content",
                 mapOf("fields" to "id")
         ) { result ->
             result.onSuccess { binding.detailJson.text = it.toString((2)) }

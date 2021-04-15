@@ -31,16 +31,13 @@ class Client(val serviceDomain: String, val apiKey: String, val globalDraftKey: 
         return JSONObject(inputAsString)
     }
 
-    fun getList(endpoint: String, params: Map<String, Any> = mapOf(), callback: (Result<JSONObject>) -> Unit) {
-        thread {
-            val result = runCatching { doRequest(endpoint, params) }
-            mainThreadHandler.post { callback.invoke(result) }
-        }
+    fun get(endpoint: String, params: Map<String, Any> = mapOf(), callback: (Result<JSONObject>) -> Unit) {
+        this.get(endpoint, null, params, callback)
     }
 
-    fun get(endpoint: String, contentId: String, params: Map<String, Any> = mapOf(), callback: (Result<JSONObject>) -> Unit) {
+    fun get(endpoint: String, contentId: String? = null, params: Map<String, Any> = mapOf(), callback: (Result<JSONObject>) -> Unit) {
         thread {
-            val result = runCatching { doRequest("${endpoint}/${contentId}", params) }
+            val result = runCatching { doRequest("${endpoint}${contentId?.let { "/$it" } ?: "" }", params) }
             mainThreadHandler.post { callback.invoke(result) }
         }
     }
