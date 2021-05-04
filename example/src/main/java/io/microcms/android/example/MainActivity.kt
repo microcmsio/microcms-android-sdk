@@ -2,7 +2,7 @@ package io.microcms.android.example
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import io.microcms.android.Client
+import io.microcms.android.MicrocmsClient
 import io.microcms.android.example.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val client = Client(
+        val client = MicrocmsClient(
                 serviceDomain = BuildConfig.MICROCMS_SERVICE_DOMAIN,
                 apiKey = BuildConfig.MICROCMS_API_KEY,
                 globalDraftKey = BuildConfig.MICROCMS_GLOBAL_DRAFT_KEY

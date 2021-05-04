@@ -9,7 +9,7 @@ import java.net.URL
 import java.net.URLEncoder
 import kotlin.concurrent.thread
 
-class Client(val serviceDomain: String, val apiKey: String, val globalDraftKey: String? = null) {
+class MicrocmsClient(val serviceDomain: String, val apiKey: String, val globalDraftKey: String? = null) {
 
     companion object {
         var baseDomain = "microcms.io"
