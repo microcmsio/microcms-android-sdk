@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -28,7 +29,7 @@ jobs:
 
           echo "signing.keyId=${{ secrets.SIGNING_KEY_ID }}" >> ~/.gradle/gradle.properties
           echo "signing.password=${{ secrets.SIGNING_PASSWORD }}" >> ~/.gradle/gradle.properties
-          gpg --batch --yes --decrypt --passphrase="${{ secrets.SECRING_GPG_PASSPHRASE }}" --output secring.gpg secring.gpg.gpg
+          gpg --batch --yes --decrypt --passphrase="${{ secrets.SECRING_GPG_PASSPHRASE }}" --output sdk/secring.gpg secring.gpg.gpg
           echo "signing.secretKeyRingFile=./secring.gpg" >> ~/.gradle/gradle.properties
 
           echo "sonatypeUsername=${{ secrets.SONATYPE_USERNAME }}" >> ~/.gradle/gradle.properties
