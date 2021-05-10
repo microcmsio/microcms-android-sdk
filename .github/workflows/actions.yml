@@ -2,10 +2,8 @@ name: Android CI
 
 on:
   push:
-    branches:
-      - '*'
-
-  workflow_dispatch:
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -40,6 +38,7 @@ jobs:
         run: |
           ./gradlew assembleRelease
           mv sdk/build/outputs/aar/-release.aar sdk/build/outputs/aar/sdk-release.aar
+          ./gradlew publish
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
