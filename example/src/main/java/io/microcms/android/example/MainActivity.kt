@@ -2,7 +2,7 @@ package io.microcms.android.example
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import io.microcms.android.MicrocmsClient
+import io.microcms.android.*
 import io.microcms.android.example.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -15,28 +15,28 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val client = MicrocmsClient(
-                serviceDomain = BuildConfig.MICROCMS_SERVICE_DOMAIN,
-                apiKey = BuildConfig.MICROCMS_API_KEY,
-                globalDraftKey = BuildConfig.MICROCMS_GLOBAL_DRAFT_KEY
+            serviceDomain = BuildConfig.MICROCMS_SERVICE_DOMAIN,
+            apiKey = BuildConfig.MICROCMS_API_KEY,
+            globalDraftKey = BuildConfig.MICROCMS_GLOBAL_DRAFT_KEY
         )
 
         //リスト取得もしくはオブジェクト形式の取得
         client.get(
-                "blog",
-                mapOf("limit" to 2, "filters" to "createdAt[greater_than]2021")
+            "blog",
+            listOf(Limit(2), Filters("createdAt[greater_than]2021"))
         ) { result ->
-           result.onSuccess { binding.listJson.text = it.toString(2) }
-                   .onFailure { binding.listJson.text = it.toString() }
+            result.onSuccess { binding.listJson.text = it.toString(2) }
+                .onFailure { binding.listJson.text = it.toString() }
         }
 
         //個別に取得
         client.get(
-                "blog",
-                "my-first-content",
-                mapOf("fields" to "id")
+            "blog",
+            "my-first-content",
+            listOf(Fields(listOf("id")))
         ) { result ->
             result.onSuccess { binding.detailJson.text = it.toString((2)) }
-                    .onFailure { binding.detailJson.text = it.toString() }
+                .onFailure { binding.detailJson.text = it.toString() }
         }
     }
 }
