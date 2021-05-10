@@ -1,0 +1,46 @@
+name: Android CI
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Prepare properties
+        run: |
+          mkdir ~/.gradle
+          touch local.properties
+
+          echo "signing.keyId=${{ secrets.SIGNING_KEY_ID }}" >> ~/.gradle/gradle.properties
+          echo "signing.password=${{ secrets.SIGNING_PASSWORD }}" >> ~/.gradle/gradle.properties
+          gpg --batch --yes --decrypt --passphrase="${{ secrets.SECRING_GPG_PASSPHRASE }}" --output secring.gpg secring.gpg.gpg
+          echo "signing.secretKeyRingFile=./secring.gpg" >> ~/.gradle/gradle.properties
+
+          echo "sonatypeUsername=${{ secrets.SONATYPE_USERNAME }}" >> ~/.gradle/gradle.properties
+          echo "sonatypePassword=${{ secrets.SONATYPE_PASSWORD }}" >> ~/.gradle/gradle.properties
+
+      - name: Build and Deploy
+        run: |
+          ./gradlew assembleRelease
+          mv sdk/build/outputs/aar/-release.aar sdk/build/outputs/aar/sdk-release.aar
+          ./gradlew publish
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: sdk/build/outputs/aar

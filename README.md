@@ -49,15 +49,15 @@ Next, you can call some api like below.
 ```kotlin
 client.get(
         "API_ENDPOINT",
-        mapOf("limit" to 2, "filters" to "createdAt[greater_than]2021") //some params
-) { result -> 
+        listOf(Limit(2), Filters("createdAt[greater_than]2021")) //some params
+) { result ->
     result.onSuccess { json -> Log.d("microCMS example", json.getJSONArray("contents").toString(2)) }
 }
 
 client.get(
         "API_ENDPOINT",
         "CONTENT_ID",
-        mapOf("fields" to "id") //some params
+        listOf(Fields("id")) //some params
 ) { result ->
     result.onSuccess { json -> Log.d("microCMS example", json.getString("publishedAt")) }
 }
