@@ -1,7 +1,7 @@
 # microCMS Android SDK
 
 It helps you to use microCMS from Android(Kotlin) applications.
-Check [the official documentation](https://document.microcms.io/tutorial/android) for more information
+Check [the official documentation](https://document.microcms.io/tutorial/android/android-top) for more information
 
 ## Getting Started
 
