@@ -37,7 +37,7 @@ First, create a client.
 
 ```kotlin
 val client = Client(
-  serviceDomain = "YOUR_DOMAIN",
+  serviceDomain = "YOUR_DOMAIN", //YOUR_DOMAIN is the XXXX part of XXXX.microcms.io
   apiKey = "YOUR_API_KEY",
   globalDraftKey = "YOUR_GLOBAL_DRAFT_KEY" //if need
 )
