@@ -77,7 +77,7 @@ publishing {
             pom {
                 name = 'io.microcms'
                 description = 'microCMS Android SDK'
-                url = 'https://github.com/wantainc/microcms-android-sdk'
+                url = 'https://github.com/microcmsio/microcms-android-sdk'
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
@@ -92,9 +92,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'git@github.com:wantainc/microcms-android-sdk.git'
-                    developerConnection = 'https://github.com/wantainc/microcms-android-sdk.git'
-                    url = 'https://github.com/wantainc/microcms-android-sdk'
+                    connection = 'git@github.com:microcmsio/microcms-android-sdk.git'
+                    developerConnection = 'https://github.com/microcmsio/microcms-android-sdk.git'
+                    url = 'https://github.com/microcmsio/microcms-android-sdk'
                 }
             }
         }
