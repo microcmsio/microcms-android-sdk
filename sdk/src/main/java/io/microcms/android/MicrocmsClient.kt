@@ -10,7 +10,6 @@ import kotlin.concurrent.thread
 class MicrocmsClient(
     val serviceDomain: String,
     val apiKey: String,
-    val globalDraftKey: String? = null
 ) {
 
     companion object {
@@ -27,10 +26,7 @@ class MicrocmsClient(
         val url =
             URL("https://${serviceDomain}.${baseDomain}/api/${apiVersion}/${endpoint}?${queries}")
         val connection = url.openConnection() as HttpURLConnection
-        connection.setRequestProperty("X-API-KEY", apiKey)
-        globalDraftKey?.let {
-            connection.setRequestProperty("X-GLOBAL-DRAFT-KEY", it)
-        }
+        connection.setRequestProperty("X-MICROCMS-API-KEY", apiKey)
         connection.connect()
 
         val inputAsString = connection.inputStream.bufferedReader().use { it.readText() }
