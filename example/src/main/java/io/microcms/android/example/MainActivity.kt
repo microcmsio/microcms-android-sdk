@@ -17,7 +17,6 @@ class MainActivity : AppCompatActivity() {
         val client = MicrocmsClient(
             serviceDomain = BuildConfig.MICROCMS_SERVICE_DOMAIN,
             apiKey = BuildConfig.MICROCMS_API_KEY,
-            globalDraftKey = BuildConfig.MICROCMS_GLOBAL_DRAFT_KEY
         )
 
         //リスト取得もしくはオブジェクト形式の取得
