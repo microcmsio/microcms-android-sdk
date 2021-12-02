@@ -1,7 +1,6 @@
 package io.microcms.android
 
 import android.os.Looper
-import android.util.Log
 import androidx.core.os.HandlerCompat
 import org.json.JSONObject
 import java.net.HttpURLConnection
@@ -36,13 +35,17 @@ class MicrocmsClient(
 
     private fun doPostRequest(
             endpoint: String,
-            params: Map<String, Any>
+            params: Map<String, Any>,
+            isDraft: Boolean
     ): JSONObject {
-        Log.d("himara2", "### doPostRequest -----------")
         val bodyData = JSONObject(params).toString().toByteArray()
 
-        val url =
-                URL("https://${serviceDomain}.${baseDomain}/api/${apiVersion}/${endpoint}")
+        val url = if (isDraft) {
+            URL("https://${serviceDomain}.${baseDomain}/api/${apiVersion}/${endpoint}?status=draft")
+        } else {
+            URL("https://${serviceDomain}.${baseDomain}/api/${apiVersion}/${endpoint}")
+        }
+
         val connection = url.openConnection() as HttpURLConnection
         connection.requestMethod = "POST"
         connection.doOutput = true
@@ -56,9 +59,6 @@ class MicrocmsClient(
         outputStream.flush()
         outputStream.close()
 
-        val statusCode = connection.responseCode
-        Log.d("himara2", "### statusCode is $statusCode -----------")
-
         val inputAsString = connection.inputStream.bufferedReader().use { it.readText() }
         return JSONObject(inputAsString)
     }
@@ -66,13 +66,17 @@ class MicrocmsClient(
     private fun doPutRequest(
             endpoint: String,
             contentId: String,
-            params: Map<String, Any>
+            params: Map<String, Any>,
+            isDraft: Boolean
     ): JSONObject {
-        Log.d("himara2", "### doPutRequest -----------")
         val bodyData = JSONObject(params).toString().toByteArray()
 
-        val url =
-                URL("https://${serviceDomain}.${baseDomain}/api/${apiVersion}/${endpoint}/${contentId}")
+        var urlString = "https://${serviceDomain}.${baseDomain}/api/${apiVersion}/${endpoint}${contentId?.let { "/$it" } ?: ""}"
+        if (isDraft) {
+            urlString += "?status=draft"
+        }
+        val url: URL = URL(urlString)
+
         val connection = url.openConnection() as HttpURLConnection
         connection.requestMethod = "PUT"
         connection.doOutput = true
@@ -86,23 +90,24 @@ class MicrocmsClient(
         outputStream.flush()
         outputStream.close()
 
-        val statusCode = connection.responseCode
-        Log.d("himara2", "### statusCode is $statusCode -----------")
-
         val inputAsString = connection.inputStream.bufferedReader().use { it.readText() }
         return JSONObject(inputAsString)
     }
 
     private fun doPatchRequest(
             endpoint: String,
-            contentId: String,
-            params: Map<String, Any>
+            contentId: String?,
+            params: Map<String, Any>,
+            isDraft: Boolean
     ): JSONObject {
-        Log.d("himara2", "### doPatchRequest -----------")
         val bodyData = JSONObject(params).toString().toByteArray()
 
-        val url =
-                URL("https://${serviceDomain}.${baseDomain}/api/${apiVersion}/${endpoint}/${contentId}")
+        var urlString = "https://${serviceDomain}.${baseDomain}/api/${apiVersion}/${endpoint}${contentId?.let { "/$it" } ?: ""}"
+        if (isDraft) {
+            urlString += "?status=draft"
+        }
+        val url = URL(urlString)
+
         val connection = url.openConnection() as HttpURLConnection
         connection.requestMethod = "PATCH"
         connection.doOutput = true
@@ -116,9 +121,6 @@ class MicrocmsClient(
         outputStream.flush()
         outputStream.close()
 
-        val statusCode = connection.responseCode
-        Log.d("himara2", "### statusCode is $statusCode -----------")
-
         val inputAsString = connection.inputStream.bufferedReader().use { it.readText() }
         return JSONObject(inputAsString)
     }
@@ -127,8 +129,6 @@ class MicrocmsClient(
             endpoint: String,
             contentId: String,
     ): JSONObject {
-        Log.d("himara2", "### doDeleteRequest -----------")
-
         val url =
                 URL("https://${serviceDomain}.${baseDomain}/api/${apiVersion}/${endpoint}/${contentId}")
         val connection = url.openConnection() as HttpURLConnection
@@ -138,9 +138,6 @@ class MicrocmsClient(
         connection.setRequestProperty("Content-type", "application/json; charset=utf-8")
 
         connection.connect()
-
-        val statusCode = connection.responseCode
-        Log.d("himara2", "### statusCode is $statusCode -----------")
 
         val inputAsString = connection.inputStream.bufferedReader().use { it.readText() }
         return JSONObject(inputAsString)
@@ -168,27 +165,50 @@ class MicrocmsClient(
         }
     }
 
-    fun post(
+    fun create(
         endpoint: String,
+        contentId: String?,
         params: Map<String, Any> = mapOf(),
+        isDraft: Boolean = false,
+        callback: (Result<JSONObject>) -> Unit
+    ) {
+        contentId?.also {
+            thread {
+                val result =
+                    runCatching { doPutRequest(endpoint, contentId, params, isDraft) }
+                mainThreadHandler.post { callback.invoke(result) }
+            }
+        } ?: run {
+            thread {
+                val result =
+                    runCatching { doPostRequest(endpoint, params, isDraft) }
+                mainThreadHandler.post { callback.invoke(result) }
+            }
+        }
+    }
+
+    fun update(
+        endpoint: String,
+        contentId: String?,
+        params: Map<String, Any> = mapOf(),
+        isDraft: Boolean = false,
         callback: (Result<JSONObject>) -> Unit
     ) {
         thread {
             val result =
-                    runCatching { doPostRequest(endpoint, params) }
+                runCatching { doPatchRequest(endpoint, contentId, params, isDraft) }
             mainThreadHandler.post { callback.invoke(result) }
         }
     }
 
-    fun put(
-            endpoint: String,
-            contentId: String,
-            params: Map<String, Any> = mapOf(),
-            callback: (Result<JSONObject>) -> Unit
+    fun delete(
+        endpoint: String,
+        contentId: String,
+        callback: (Result<JSONObject>) -> Unit
     ) {
         thread {
             val result =
-                    runCatching { doPutRequest(endpoint, contentId, params) }
+                runCatching { doDeleteRequest(endpoint, contentId) }
             mainThreadHandler.post { callback.invoke(result) }
         }
     }
