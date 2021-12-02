@@ -72,12 +72,12 @@ publishing {
 
             groupId = "io.microcms"
             artifactId = "android-sdk"
-            version = "2.0.0"
+            version = "2.1.0"
 
             pom {
                 name = 'io.microcms'
                 description = 'microCMS Android SDK'
-                url = 'https://github.com/wantainc/microcms-android-sdk'
+                url = 'https://github.com/microcms/microcms-android-sdk'
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
