@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
         //リスト取得もしくはオブジェクト形式の取得
         client.get(
-            "blog",
+            "news_android",
             listOf(Limit(2), Filters("createdAt[greater_than]2021"))
         ) { result ->
             result.onSuccess { binding.listJson.text = it.toString(2) }
@@ -30,8 +30,8 @@ class MainActivity : AppCompatActivity() {
 
         //個別に取得
         client.get(
-            "blog",
-            "my-first-content",
+            "news_android",
+            "96lj7-j_np",
             listOf(Fields(listOf("id")))
         ) { result ->
             result.onSuccess { binding.detailJson.text = it.toString((2)) }
