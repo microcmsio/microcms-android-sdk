@@ -1,23 +1,29 @@
 # microCMS Android SDK
 
-It helps you to use microCMS from Android(Kotlin) applications.
-Check [the official documentation](https://document.microcms.io/tutorial/android/android-top) for more information
+> [!WARNING]
+> このSDKの現在の保守レベルは `Deprecated` です。
+>
+> 新規利用は推奨していません。新規開発では代替手段の利用を検討してください。
+>
+> 詳細は[SDKの保守方針](https://document.microcms.io/manual/limitations#h3e85e9ca1d)をご覧ください。
 
-## Getting Started
+Android（Kotlin）アプリケーションからmicroCMSを簡単に利用できます。
 
-### Installation
+## はじめに
 
-The library is located in maven central.
+### インストール
+
+このライブラリはMaven Centralで公開されています。
 
 ```gradle
 buildscript {
     repositories {
-        mavenCentral() //need this line
+        mavenCentral()
     }
 }
 ```
 
-Install dependency:
+依存関係を追加します。
 
 ```gradle
 dependencies {
@@ -25,140 +31,141 @@ dependencies {
 }
 ```
 
-And you need to get `android.permission.INTERNET` permission in the manifest:
+また、マニフェストで `android.permission.INTERNET` 権限を追加してください。
 
 ```xml
 <uses-permission android:name="android.permission.INTERNET" />
 ```
 
-### How to use
+## 使い方
 
-First, create a client.
+### クライアントオブジェクトの作成
 
 ```kotlin
 val client = Client(
-  serviceDomain = "YOUR_DOMAIN", //YOUR_DOMAIN is the XXXX part of XXXX.microcms.io
-  apiKey = "YOUR_API_KEY",
+    serviceDomain = "YOUR_DOMAIN", // YOUR_DOMAINはXXXX.microcms.ioのXXXXの部分です
+    apiKey = "YOUR_API_KEY",
 )
 ```
 
-Next, you can call some api like below.
-`result`(`Result<JSONObject>`) is a instance of [kotlin standard class](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/).
+以下のようにAPIを呼び出せます。
 
-### Get content list
+コールバックに渡される `result`（`Result<JSONObject>`）は、[Kotlin標準ライブラリのクラス](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/)です。
+
+### コンテンツ一覧の取得
 
 ```kotlin
 client.get(
-        "API_ENDPOINT"
+    "API_ENDPOINT"
 ) { result ->
     result.onSuccess { json -> Log.d("microCMS example", json.getJSONArray("contents").toString(2)) }
 }
 ```
 
-### Get content list with parameters
+### パラメータを指定したコンテンツ一覧の取得
 
 ```kotlin
 client.get(
-        "API_ENDPOINT",
-        listOf(Limit(2), Filters("createdAt[greater_than]2021")) //some params
+    "API_ENDPOINT",
+    listOf(Limit(2), Filters("createdAt[greater_than]2021"))
 ) { result ->
     result.onSuccess { json -> Log.d("microCMS example", json.getJSONArray("contents").toString(2)) }
 }
 ```
 
-### Get single content
+### 単一コンテンツの取得
 
 ```kotlin
 client.get(
-        "API_ENDPOINT",
-        "CONTENT_ID",
-        listOf(Fields("id")) //some params
+    "API_ENDPOINT",
+    "CONTENT_ID",
+    listOf(Fields("id"))
 ) { result ->
     result.onSuccess { json -> Log.d("microCMS example", json.getString("publishedAt")) }
 }
 ```
 
-### Get object form content
+### オブジェクト形式のコンテンツの取得
 
 ```kotlin
 client.get(
-        "API_ENDPOINT",
-        listOf(Fields("id")) //some params
+    "API_ENDPOINT",
+    listOf(Fields("id"))
 ) { result ->
     result.onSuccess { json -> Log.d("microCMS example", json.getString("publishedAt")) }
 }
 ```
 
-### Create content
+### コンテンツの作成
 
 ```kotlin
 client.create(
-        "API_ENDPOINT",
-        null,
-        mapOf("text" to  "Hello Android SDK!"),
-        false
+    "API_ENDPOINT",
+    null,
+    mapOf("text" to "Hello Android SDK!"),
+    false
 ) { result ->
     result.onSuccess { json -> Log.d("microCMS example", json.getString("publishedAt")) }
 }
 ```
 
-### Create content with specified ID
+### IDを指定したコンテンツの作成
 
 ```kotlin
 client.create(
-        "API_ENDPOINT",
-        "CONTENT_ID",
-        mapOf("text" to  "Hello Android SDK!"),
-        false
+    "API_ENDPOINT",
+    "CONTENT_ID",
+    mapOf("text" to "Hello Android SDK!"),
+    false
 ) { result ->
     result.onSuccess { json -> Log.d("microCMS example", json.getString("publishedAt")) }
 }
 ```
 
-### Create draft content
+### 下書きコンテンツの作成
 
 ```kotlin
 client.create(
-        "API_ENDPOINT",
-        "CONTENT_ID",
-        mapOf("text" to  "Hello Android SDK!"),
-        true
+    "API_ENDPOINT",
+    "CONTENT_ID",
+    mapOf("text" to "Hello Android SDK!"),
+    true
 ) { result ->
     result.onSuccess { json -> Log.d("microCMS example", json.getString("publishedAt")) }
 }
 ```
 
-### Update content
+### コンテンツの更新
 
 ```kotlin
 client.update(
-        "API_ENDPOINT",
-        "CONTENT_ID",
-        mapOf("text" to "Hello Android SDK update method!")
+    "API_ENDPOINT",
+    "CONTENT_ID",
+    mapOf("text" to "Hello Android SDK update method!")
 ) { result ->
     result.onSuccess { json -> Log.d("microCMS example", json.getString("publishedAt")) }
 }
 ```
 
-### Update object form content
+### オブジェクト形式のコンテンツの更新
 
 ```kotlin
 client.update(
-        "API_ENDPOINT",
-        null,
-        mapOf("message" to "Hello Android SDK!")
+    "API_ENDPOINT",
+    null,
+    mapOf("message" to "Hello Android SDK!")
 ) { result ->
     result.onSuccess { json -> Log.d("microCMS example", json.getString("publishedAt")) }
 }
 ```
 
-### Delete content
+### コンテンツの削除
 
 ```kotlin
 client.delete(
-        "API_ENDPOINT",
-        "CONTENT_ID")
-{ result ->
+    "API_ENDPOINT",
+    "CONTENT_ID"
+) { result ->
     result.onSuccess { json -> Log.d("microCMS example", json.getString("publishedAt")) }
 }
 ```
