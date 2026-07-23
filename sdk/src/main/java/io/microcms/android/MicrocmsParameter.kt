@@ -35,5 +35,5 @@ data class Ids(val values: List<String>) : MicrocmsParameter() {
 }
 
 data class Filters(val value: String) : MicrocmsParameter() {
-    override fun toUrlParameter() = "filters=$value"
+    override fun toUrlParameter() = "filters=${URLEncoder.encode(value, "UTF-8")}"
 }
